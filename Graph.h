@@ -1,120 +1,161 @@
+#ifndef GRAPH_H
+#define	GRAPH_H
+
 #include <list>
+#include <vector>
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <algorithm>
+#include "GraphNode.h"
+#include "CompareDegreeFunctor.h"
+#include "CompareLabelFunctor.h"
 
 using namespace std;
-class Graph
-{
+
+class Graph {
 public:
-    Graph(const char path[])
-    {
+
+    Graph(const char path[]) {
         int u;
         int v;
         string linea;
-        ifstream instancia (path);
+        ifstream instancia(path);
         char* token;
+        bool primeraLineaLeida = false;
 
-        if (instancia.is_open())
-        {
-            while (instancia.good())
-            {
-                getline (instancia,linea);
+        if (instancia.is_open()) {
+            while (instancia.good()) {
+                getline(instancia, linea);
                 char copia [linea.size() + 1];
                 strcpy(copia, linea.c_str());
 
-                token = strtok (copia," ");
-                while (token!=NULL)
-                {
-                    if(strcmp(token, "e"))
-                    {
-                        token = strtok(NULL," ");
+                token = strtok(copia, " ");
+                while (token != NULL) {
+                    if (strcmp(token, "e") == 0) {
+                        if (!primeraLineaLeida)
+                            throw string("Formato de archivo invalido");
+                        token = strtok(NULL, " ");
                         u = atoi(token);
-                        token = strtok(NULL," ");
+                        token = strtok(NULL, " ");
                         v = atoi(token);
-                        addArc(u,v);
-                    }
-                    else if(strcmp(token,"c")==0)
-                    {
-                        continue;
-                    }
-                    else if(strcmp(token, "p")==0)
-                    {
-                        token=strtok(NULL," ");
-                        token=strtok(NULL," ");
-
-                        n = atoi(token);
-
-                        token=strtok(NULL," ");
-
+                        addArc(u, v);
+                        break;
+                    } else if (strcmp(token, "c") == 0) {
+                        break;
+                    } else if (strcmp(token, "p") == 0) {
+                        token = strtok(NULL, " ");
+                        token = strtok(NULL, " ");
+                        numNodes = atoi(token);
+                        token = strtok(NULL, " ");
                         m = atoi(token);
-
-                        adjacencyArray = new list<int>* [n];
-
-                        nodes = new int[n];
+                        nodesArray = new GraphNode* [numNodes];
+                        adjacencyArray = new vector<GraphNode*>* [numNodes];
+                        nodesDegreeSortedArray = new GraphNode* [numNodes];
+                        initializeNodesArrays();
+                        initializeAdjancencyArray();
+                        primeraLineaLeida = true;
+                        break;
                     }
-                    token=strtok(NULL," ");
+                    token = strtok(NULL, " ");
                 }
             }
             instancia.close();
-        }
-        else
-        {
-            //throw new exception("No se pudo abrir el archivo");
-        }
-    }
-    virtual ~Graph() {}
-
-    Graph(const Graph& other)
-    {
-    }
-
-    void addArc(int u, int v)
-    {
-        adjacencyArray[u]->push_front(v);
-        adjacencyArray[v]->push_front(u);
-    }
-
-    list<int>* neighbors(int node_label)
-    {
-        return new list<int> (*(adjacencyArray[node_label]));
-    }
-
-    void setColor(int node_label, int color)
-    {
-        if(node_label>0 && node_label <= n)
-        {
-            nodes[node_label-1] = color;
-        }
-        else
-        {
-            throw new exception();
+            sortNodesByDegree();
+            sortAdjacentNodes();
+        } else {
+            throw string("No se pudo abrir el archivo");
         }
     }
 
-    int getColor(int node_label)
-    {
-        return nodes[node_label-1];
+    virtual ~Graph() {
+        for (int i = 0; i < numNodes; i++) {
+            delete(adjacencyArray[i]);
+            delete(nodesArray[i]);
+        }
+        delete[] nodesDegreeSortedArray;
+        delete[] adjacencyArray;
+        delete[] nodesArray;
     }
 
-    int* currentColoring()
-    {
+    Graph(const Graph& other) {
+    }
+
+    void addArc(int u, int v) {
+        adjacencyArray[u - 1]->push_back(nodesArray[u - 1]);
+        adjacencyArray[v - 1]->push_back(nodesArray[v - 1]);
+
+        //Incrementar el grado de cada nodo
+        ++(*(nodesArray[u - 1]));
+        ++(*(nodesArray[v - 1]));
+    }
+
+    const vector<GraphNode*>* neighbors(int node_label) {
+        if (node_label > 0 && node_label <= numNodes) {
+            return adjacencyArray[node_label - 1];
+        } else {
+            throw string("Etiqueta de nodo invalida en Graph::Neighbors");
+        }
+    }
+
+    void setColor(int node_label, int color) {
+        if (node_label > 0 && node_label <= numNodes) {
+            nodesArray[node_label - 1]->SetColor(color);
+        } else {
+            throw string("Etiqueta de nodo invalida en Graph::SetColor");
+        }
+    }
+
+    int getColor(int node_label) {
+        return nodesArray[node_label - 1]->GetColor();
+    }
+
+    void printCurrentColoring() {
+        cout << "Vertice\tColor\tGrado\tEtiqueta\n";
+        for (int i = 0; i < numNodes; i++) {
+            cout << i + 1 << "\t"
+                    << nodesDegreeSortedArray[i]->GetColor() << "\t"
+                    << nodesDegreeSortedArray[i]->GetDegree() << "\t"
+                    << nodesDegreeSortedArray[i]->GetLabel() << "\n";
+        }
+    }
+
+    void Dsatur(int tmax) {
 
     }
 
-    void Dsatur(int tmax)
-    {
-
-    }
-    void Brown(int tmax)
-    {
+    void Brown(int tmax) {
 
     }
 
 private:
 
-    list<int>** adjacencyArray;
-    int* nodes;
-    int n;
+    vector<GraphNode*> ** adjacencyArray;
+    GraphNode** nodesArray;
+    GraphNode** nodesDegreeSortedArray;
+    int numNodes;
     int m;
+
+    void sortAdjacentNodes() {
+    }
+
+    void sortNodesByDegree() {
+        CompareDegreeFunctor comparer;
+        sort(nodesDegreeSortedArray, nodesDegreeSortedArray + numNodes,  comparer);
+    }
+
+    void initializeNodesArrays() {
+        for (int i = 0; i < numNodes; i++) {
+            nodesArray[i] = nodesDegreeSortedArray[i] = new GraphNode();
+            nodesArray[i]->SetLabel(i + 1);
+        }
+    }
+
+    void initializeAdjancencyArray() {
+        for (int i = 0; i < numNodes; i++) {
+            adjacencyArray[i] = new vector<GraphNode*>;
+        }
+    }
 };
+
+#endif
