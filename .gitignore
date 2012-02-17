@@ -2,4 +2,5 @@
 bin/
 *.layout~
 *.layout
+obj/
 
