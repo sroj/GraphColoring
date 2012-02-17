@@ -3,9 +3,11 @@
 
 #include "GraphNode.h"
 
-class CompareDegreeFunctor {
+class CompareDegreeFunctor
+{
 public:
-    bool operator() (const GraphNode* node_1, const GraphNode* node_2) {
+    bool operator() (const GraphNode* node_1, const GraphNode* node_2)
+    {
         return (node_1->GetDegree())>(node_2->GetDegree());
     }
 };

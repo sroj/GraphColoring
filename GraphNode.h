@@ -1,56 +1,69 @@
 #ifndef GRAPHNODE_H
 #define	GRAPHNODE_H
 
-class GraphNode {
+class GraphNode
+{
 public:
 
-    GraphNode() : color(0), saturationDegree(0), degree(0), label(0) {
+    GraphNode() : color(0), saturationDegree(0), degree(0), label(0)
+    {
     };
 
-    GraphNode(const GraphNode& orig) {
+    GraphNode(const GraphNode& orig)
+    {
         color = orig.color;
         saturationDegree = orig.saturationDegree;
         degree = orig.degree;
         label = orig.label;
     };
 
-    virtual ~GraphNode() {
+    virtual ~GraphNode()
+    {
         //Nada interesante que hacer aqui
     };
 
-    int GetSaturationDegree() const {
+    int GetSaturationDegree() const
+    {
         return saturationDegree;
     }
 
-    void SetSaturationDegree(int SaturationDegree) {
+    void SetSaturationDegree(int SaturationDegree)
+    {
         this->saturationDegree = SaturationDegree;
     }
 
-    int GetColor() const {
+    int GetColor() const
+    {
         return color;
     }
 
-    void SetColor(int color) {
+    void SetColor(int color)
+    {
         this->color = color;
     }
 
-    int GetDegree() const {
+    int GetDegree() const
+    {
         return degree;
     }
 
-    void SetDegree(int degree) {
+    void SetDegree(int degree)
+    {
         this->degree = degree;
     }
 
-    int GetLabel() const {
+    int GetLabel() const
+    {
         return label;
     }
 
-    void SetLabel(int label) {
+    void SetLabel(int label)
+    {
         this->label = label;
     }
 
-    GraphNode& operator++() {
+    GraphNode& operator++()
+    {
         ++degree;
         return *this;
     }
