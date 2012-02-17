@@ -38,7 +38,7 @@ int main(int argc, const char *argv[])
             }
             else
             {
-               //throw new exception("Uno de los argumentos es invalido");
+                //throw new exception("Uno de los argumentos es invalido");
             }
         }
 
@@ -55,7 +55,7 @@ int main(int argc, const char *argv[])
     }
     else
     {
-       // throw new exception("El numero de argumentos es incorrecto");
+        // throw new exception("El numero de argumentos es incorrecto");
     }
     return 0;
 }
