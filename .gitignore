@@ -1,6 +1,5 @@
 *.[oa]
 bin/
-*.layout~
-*.layout
+*.layout*
 obj/
 
