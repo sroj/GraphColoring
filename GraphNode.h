@@ -32,6 +32,11 @@ public:
         this->saturationDegree = SaturationDegree;
     }
 
+    void IncrementSaturationDegree()
+    {
+        this->saturationDegree++;
+    }
+
     int GetColor() const
     {
         return color;

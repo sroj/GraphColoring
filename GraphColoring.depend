@@ -2,3 +2,30 @@
 1327458784 source:/home/simonr/Documents/GraphColoring/main.cpp
 	<iostream>
 
+1329602472 source:/home/administrador/Documents/GraphColoring/main.cpp
+	<iostream>
+	<cstring>
+	<cstdlib>
+	"Graph.h"
+	<ctime>
+	<string>
+
+1329694750 /home/administrador/Documents/GraphColoring/Graph.h
+	<list>
+	<vector>
+	<iostream>
+	<fstream>
+	<string>
+	<algorithm>
+	"GraphNode.h"
+	"CompareDegreeFunctor.h"
+	"CompareLabelFunctor.h"
+
+1329694503 /home/administrador/Documents/GraphColoring/GraphNode.h
+
+1329602472 /home/administrador/Documents/GraphColoring/CompareDegreeFunctor.h
+	"GraphNode.h"
+
+1329602472 /home/administrador/Documents/GraphColoring/CompareLabelFunctor.h
+	"GraphNode.h"
+

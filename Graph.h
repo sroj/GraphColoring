@@ -130,6 +130,37 @@ public:
         }
     }
 
+    void setColorDsatur(int node_label, int color)
+    {
+        if (node_label > 0 && node_label <= numNodes)
+        {
+            nodesArray[node_label - 1]->SetColor(color);
+        }
+        else
+        {
+            throw string("Etiqueta de nodo invalida en Graph::SetColor");
+        }
+
+        const vector<GraphNode*> *adjacents = neighbors(node_label);
+
+        for(unsigned int i=0; i< adjacents->size(); i++)
+        {
+            const vector<GraphNode*> *adjacentNeighbors = neighbors((*adjacents)[i]->GetLabel());
+            bool found=false;
+            for(unsigned int j=0; j< adjacentNeighbors->size(); j++)
+            {
+                if((*adjacentNeighbors)[j]->GetLabel() != node_label && (*adjacentNeighbors)[j]->GetColor() == getColor(node_label))
+                {
+                    found = true;
+                }
+            }
+            if(!found)
+            {
+                nodesArray[(*adjacents)[i]->GetLabel() - 1]->IncrementSaturationDegree();
+            }
+        }
+    }
+
     int getColor(int node_label)
     {
         return nodesArray[node_label - 1]->GetColor();
@@ -149,7 +180,13 @@ public:
 
     void Dsatur(int tmax)
     {
+        int cantColoreados = 0;
+        setColorDsatur(nodesDegreeSortedArray[0]->GetLabel(), 1);
 
+        while(cantColoreados < numNodes)
+        {
+
+        }
     }
 
     void Brown(int tmax)
@@ -159,7 +196,7 @@ public:
 
 private:
 
-    vector<GraphNode*> ** adjacencyArray;
+    vector<GraphNode*> **adjacencyArray;
     GraphNode** nodesArray;
     GraphNode** nodesDegreeSortedArray;
     int numNodes;
