@@ -58,7 +58,7 @@ public:
                         token = strtok(NULL, " ");
                         numNodes = atoi(token);
                         token = strtok(NULL, " ");
-                        m = atoi(token);
+                        numEdges = atoi(token);
                         nodesArray = new GraphNode* [numNodes];
                         adjacencyArray = new vector<GraphNode*>* [numNodes];
                         nodesDegreeSortedArray = new GraphNode* [numNodes];
@@ -92,8 +92,35 @@ public:
         delete[] nodesArray;
     }
 
+    //Copy-constructor
     Graph(const Graph& other)
     {
+        numNodes = other.numNodes;
+        numEdges = other.numEdges;
+        nodesArray = new GraphNode* [numNodes];
+        nodesDegreeSortedArray = new GraphNode* [numNodes];
+        adjacencyArray = new vector<GraphNode*>* [numNodes];
+
+        for(int i = 0; i < numNodes; i++)
+        {
+            nodesArray[i] = new GraphNode(*(other.nodesArray[i]));
+        }
+
+        for(int i = 0; i < numNodes; i++)
+        {
+            nodesDegreeSortedArray[i] = nodesArray[other.nodesDegreeSortedArray[i]->GetLabel()];
+        }
+
+        for(int i = 0; i < numNodes; i++)
+        {
+            unsigned int vectorSize = other.adjacencyArray[i]->size();
+            vector<GraphNode*>* adjacentNodes = other.adjacencyArray[i];
+
+            for(unsigned int j = 0; j < vectorSize; j++)
+            {
+                adjacencyArray[i]->push_back(nodesArray[(adjacentNodes->at(j))->GetLabel()]);
+            }
+        }
     }
 
     void addArc(int u, int v)
@@ -163,7 +190,7 @@ private:
     GraphNode** nodesArray;
     GraphNode** nodesDegreeSortedArray;
     int numNodes;
-    int m;
+    int numEdges;
 
     void sortAdjacentNodes()
     {
