@@ -59,7 +59,7 @@ public:
                         token = strtok(NULL, " ");
                         numNodes = atoi(token);
                         token = strtok(NULL, " ");
-                        m = atoi(token);
+                        numEdges = atoi(token);
                         nodesArray = new GraphNode* [numNodes];
                         adjacencyArray = new vector<GraphNode*>* [numNodes];
                         nodesDegreeSortedArray = new GraphNode* [numNodes];
@@ -93,8 +93,35 @@ public:
         delete[] nodesArray;
     }
 
+    //Copy-constructor
     Graph(const Graph& other)
     {
+        numNodes = other.numNodes;
+        numEdges = other.numEdges;
+        nodesArray = new GraphNode* [numNodes];
+        nodesDegreeSortedArray = new GraphNode* [numNodes];
+        adjacencyArray = new vector<GraphNode*>* [numNodes];
+
+        for(int i = 0; i < numNodes; i++)
+        {
+            nodesArray[i] = new GraphNode(*(other.nodesArray[i]));
+        }
+
+        for(int i = 0; i < numNodes; i++)
+        {
+            nodesDegreeSortedArray[i] = nodesArray[other.nodesDegreeSortedArray[i]->GetLabel() - 1];
+        }
+
+        for(int i = 0; i < numNodes; i++)
+        {
+            unsigned int vectorSize = other.adjacencyArray[i]->size();
+            vector<GraphNode*>* adjacentNodes = other.adjacencyArray[i];
+
+            for(unsigned int j = 0; j < vectorSize; j++)
+            {
+                adjacencyArray[i]->push_back(nodesArray[(adjacentNodes->at(j))->GetLabel() - 1]);
+            }
+        }
     }
 
     void addArc(int u, int v)
@@ -109,26 +136,20 @@ public:
 
     const vector<GraphNode*>* neighbors(int node_label)
     {
-        if (node_label > 0 && node_label <= numNodes)
-        {
-            return adjacencyArray[node_label - 1];
-        }
-        else
+        if (node_label <= 0 || node_label > numNodes)
         {
             throw string("Etiqueta de nodo invalida en Graph::Neighbors");
         }
+        return adjacencyArray[node_label - 1];
     }
 
     void setColor(int node_label, int color)
     {
-        if (node_label > 0 && node_label <= numNodes)
-        {
-            nodesArray[node_label - 1]->SetColor(color);
-        }
-        else
+        if (node_label <= 0 || node_label > numNodes)
         {
             throw string("Etiqueta de nodo invalida en Graph::SetColor");
         }
+        nodesArray[node_label - 1]->SetColor(color);
     }
 
     void setColorDsatur(int node_label, int color)
@@ -165,6 +186,10 @@ public:
 
     int getColor(int node_label)
     {
+        if (node_label <= 0 || node_label > numNodes)
+        {
+            throw string("Etiqueta de nodo invalida en Graph::getColor");
+        }
         return nodesArray[node_label - 1]->GetColor();
     }
 
@@ -224,7 +249,7 @@ private:
     GraphNode** nodesDegreeSortedArray;
     int numNodes;
     int numColored;
-    int m;
+    int numEdges;
 
     void sortAdjacentNodes()
     {
@@ -251,6 +276,34 @@ private:
         {
             adjacencyArray[i] = new vector<GraphNode*>;
         }
+    }
+
+    int GetMinimumFeasibleColor(int node_label, int color)
+    {
+        if (node_label <= 0 || node_label > numNodes)
+        {
+            throw string("Etiqueta de nodo invalida en Graph::GetMinimumFeasibleColor");
+        }
+
+        bool adjacentColors[numNodes];
+        bool * colorMinimo;
+
+        for(int i = 0; i < numNodes; i++)
+            adjacentColors[i] = false;
+
+        vector<GraphNode*> * adjacentNodes = adjacencyArray[node_label - 1];
+        vector<GraphNode*>::iterator it;
+
+        for(it = (adjacentNodes->begin()); it < adjacentNodes->end(); it++)
+        {
+            adjacentColors[((*it)->GetColor()) - 1] = true;
+        }
+
+        if ((colorMinimo = find(adjacentColors, adjacentColors + numNodes, false))
+                < adjacentColors + numNodes)
+            return colorMinimo - adjacentColors + 1;
+        else
+            throw string("No se encontro un color minimo valido");
     }
 };
 
