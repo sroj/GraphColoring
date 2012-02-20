@@ -237,6 +237,7 @@ public:
 
     void Brown(int tmax)
     {
+        void asignarColoracionInicialBrown();
 
     }
 
@@ -276,7 +277,7 @@ private:
         }
     }
 
-    int GetMinimumFeasibleColor(int node_label, int color)
+    int getMinimumFeasibleColor(int node_label)
     {
         if (node_label <= 0 || node_label > numNodes)
         {
@@ -302,6 +303,18 @@ private:
             return colorMinimo - adjacentColors + 1;
         else
             return 0;
+    }
+
+    void asignarColoracionInicialBrown()
+    {
+        int color;
+
+        for(int i = 0; i < numNodes; i++)
+        {
+            if ((color = getMinimumFeasibleColor(i + 1)) == 0)
+                throw string("No se pudo completar la coloracion inicial");
+            nodesArray[i]->SetColor(color);
+        }
     }
 };
 
