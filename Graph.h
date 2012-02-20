@@ -126,8 +126,8 @@ public:
 
     void addArc(int u, int v)
     {
-        adjacencyArray[u - 1]->push_back(nodesArray[u - 1]);
-        adjacencyArray[v - 1]->push_back(nodesArray[v - 1]);
+        (adjacencyArray[u - 1])->push_back(nodesArray[v - 1]);
+        (adjacencyArray[v - 1])->push_back(nodesArray[u - 1]);
 
         //Incrementar el grado de cada nodo
         ++(*(nodesArray[u - 1]));
@@ -209,9 +209,26 @@ public:
         for (int i = 0; i < numNodes; i++)
         {
             cout << i + 1 << "\t"
-                 << nodesDegreeSortedArray[i]->GetColor() << "\t"
+                 << nodesArray[i]->GetColor() << "\t"
                  << nodesDegreeSortedArray[i]->GetDegree() << "\t"
                  << nodesDegreeSortedArray[i]->GetLabel() << "\n";
+        }
+    }
+
+    void printGraphStructure()
+    {
+        cout << "Estructura del grafo:" << endl;
+        vector<GraphNode*> * adjacents;
+        for (int i = 0; i < numNodes; i++)
+        {
+            cout << "Nodo " << i + 1 << " es adyacente a:" <<endl;
+            adjacents = adjacencyArray[i];
+            for (unsigned int j = 0; j < adjacents->size(); j++)
+            {
+                cout << "Etiqueta: " << (*adjacents)[j]->GetLabel() << " Color:" << (*adjacents)[j]->GetColor() << endl;
+
+            }
+            cout << "\n";
         }
     }
 
@@ -270,8 +287,7 @@ public:
 
     void Brown(int tmax)
     {
-        void asignarColoracionInicialBrown();
-
+        asignarColoracionInicialBrown();
     }
 
 private:
@@ -320,16 +336,18 @@ private:
 
         bool adjacentColors[numNodes];
         bool * colorMinimo;
+        int color = 0;
 
         for(int i = 0; i < numNodes; i++)
             adjacentColors[i] = false;
 
         vector<GraphNode*> * adjacentNodes = adjacencyArray[node_label - 1];
-        vector<GraphNode*>::iterator it;
 
-        for(it = (adjacentNodes->begin()); it < adjacentNodes->end(); it++)
+        for(unsigned int i = 0; i < adjacentNodes->size(); i++)
         {
-            adjacentColors[((*it)->GetColor()) - 1] = true;
+            color = ((*adjacentNodes)[i])->GetColor();
+            if (color > 0)
+                adjacentColors[color - 1] = true;
         }
 
         if ((colorMinimo = find(adjacentColors, adjacentColors + numNodes, false))

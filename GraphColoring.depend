@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1329512946 source:/home/simonr/Documents/GraphColoring/main.cpp
+1329778181 source:/home/simonr/Documents/GraphColoring/main.cpp
 	<iostream>
 	<cstring>
 	<cstdlib>
@@ -7,7 +7,7 @@
 	<ctime>
 	<string>
 
-1329704202 /home/simonr/Documents/GraphColoring/Graph.h
+1329778751 /home/simonr/Documents/GraphColoring/Graph.h
 	<list>
 	<vector>
 	<iostream>
