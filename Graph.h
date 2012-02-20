@@ -27,59 +27,56 @@ public:
         char* token;
         bool primeraLineaLeida = false;
 
-        if (instancia.is_open())
-        {
-            while (instancia.good())
-            {
-                getline(instancia, linea);
-                char copia [linea.size() + 1];
-                strcpy(copia, linea.c_str());
-
-                token = strtok(copia, " ");
-                while (token != NULL)
-                {
-                    if (strcmp(token, "e") == 0)
-                    {
-                        if (!primeraLineaLeida)
-                            throw string("Formato de archivo invalido");
-                        token = strtok(NULL, " ");
-                        u = atoi(token);
-                        token = strtok(NULL, " ");
-                        v = atoi(token);
-                        addArc(u, v);
-                        break;
-                    }
-                    else if (strcmp(token, "c") == 0)
-                    {
-                        break;
-                    }
-                    else if (strcmp(token, "p") == 0)
-                    {
-                        token = strtok(NULL, " ");
-                        token = strtok(NULL, " ");
-                        numNodes = atoi(token);
-                        token = strtok(NULL, " ");
-                        numEdges = atoi(token);
-                        nodesArray = new GraphNode* [numNodes];
-                        adjacencyArray = new vector<GraphNode*>* [numNodes];
-                        nodesDegreeSortedArray = new GraphNode* [numNodes];
-                        initializeNodesArrays();
-                        initializeAdjancencyArray();
-                        primeraLineaLeida = true;
-                        break;
-                    }
-                    token = strtok(NULL, " ");
-                }
-            }
-            instancia.close();
-            sortNodesByDegree();
-            sortAdjacentNodes();
-        }
-        else
-        {
+        if (!instancia.is_open())
             throw string("No se pudo abrir el archivo");
+
+        while (instancia.good())
+        {
+            getline(instancia, linea);
+            char copia [linea.size() + 1];
+            strcpy(copia, linea.c_str());
+
+            token = strtok(copia, " ");
+            while (token != NULL)
+            {
+                if (strcmp(token, "e") == 0)
+                {
+                    if (!primeraLineaLeida)
+                        throw string("Formato de archivo invalido");
+                    token = strtok(NULL, " ");
+                    u = atoi(token);
+                    token = strtok(NULL, " ");
+                    v = atoi(token);
+                    addArc(u, v);
+                    break;
+                }
+                else if (strcmp(token, "c") == 0)
+                {
+                    break;
+                }
+                else if (strcmp(token, "p") == 0)
+                {
+                    token = strtok(NULL, " ");
+                    token = strtok(NULL, " ");
+                    numNodes = atoi(token);
+                    token = strtok(NULL, " ");
+                    numEdges = atoi(token);
+                    nodesArray = new GraphNode* [numNodes];
+                    adjacencyArray = new vector<GraphNode*>* [numNodes];
+                    nodesDegreeSortedArray = new GraphNode* [numNodes];
+                    initializeNodesArrays();
+                    initializeAdjancencyArray();
+                    primeraLineaLeida = true;
+                    break;
+                }
+                token = strtok(NULL, " ");
+            }
         }
+        instancia.close();
+        sortNodesByDegree();
+        sortAdjacentNodes();
     }
+
 
     virtual ~Graph()
     {
@@ -98,6 +95,7 @@ public:
     {
         numNodes = other.numNodes;
         numEdges = other.numEdges;
+        numColored = other.numColored;
         nodesArray = new GraphNode* [numNodes];
         nodesDegreeSortedArray = new GraphNode* [numNodes];
         adjacencyArray = new vector<GraphNode*>* [numNodes];
