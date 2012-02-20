@@ -158,6 +158,16 @@ public:
         {
             nodesArray[node_label - 1]->SetColor(color);
             numColored++;
+            bool encontrado = false;
+
+            for (list<GraphNode*>::iterator it = uncoloredNodes->begin(); it != uncoloredNodes->end() && !encontrado; it++)
+            {
+                if((*it)->GetLabel() == node_label)
+                {
+                    uncoloredNodes->erase(it);
+                    encontrado = true;
+                }
+            }
         }
         else
         {
@@ -229,18 +239,32 @@ public:
 
     void Dsatur(int tmax)
     {
-
         int cantColoreados = 0;
         setColorDsatur(nodesDegreeSortedArray[0]->GetLabel(), 1);
         while(cantColoreados < numNodes)
         {
             const vector<GraphNode*>* maximalSaturation = MaximalSaturationDegree();
-
             if(maximalSaturation->size()==1)
             {
-
+                int label = maximalSaturation->front()->GetLabel();
+                int minColor = GetMinimumFeasibleColor(label);
+                setColorDsatur(label, minColor);
             }
-
+            else
+            {
+                int maxDegreeLabel;
+                int maxDegree = 0;
+                for(unsigned int i=0; i< maximalSaturation->size(); i++)
+                {
+                    if((*maximalSaturation)[i]->GetDegree() > maxDegree)
+                    {
+                        maxDegree = (*maximalSaturation)[i]->GetDegree();
+                        maxDegreeLabel= (*maximalSaturation)[i]->GetLabel();
+                    }
+                }
+                int minColor = GetMinimumFeasibleColor(maxDegreeLabel);
+                setColorDsatur(maxDegreeLabel, minColor);
+            }
         }
     }
 
@@ -286,7 +310,7 @@ private:
         }
     }
 
-    int GetMinimumFeasibleColor(int node_label, int color)
+    int GetMinimumFeasibleColor(int node_label)
     {
         if (node_label <= 0 || node_label > numNodes)
         {
