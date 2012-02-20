@@ -21,6 +21,7 @@ public:
     {
         int u;
         int v;
+        numColored = 0;
         string linea;
         ifstream instancia(path);
         char* token;
@@ -135,6 +136,7 @@ public:
         if (node_label > 0 && node_label <= numNodes)
         {
             nodesArray[node_label - 1]->SetColor(color);
+            numColored++;
         }
         else
         {
@@ -178,11 +180,32 @@ public:
         }
     }
 
+    const vector<GraphNode*>* MaximalSaturationDegree()
+    {
+        vector<GraphNode*>* maximalSaturation = new vector<GraphNode*>;
+        int max = 0;
+
+        for(int i=0; i<numNodes; i++)
+        {
+            if(nodesArray[i]->GetSaturationDegree() > max)
+            {
+                max = nodesArray[i]->GetSaturationDegree();
+            }
+        }
+        for(int i=0; i<numNodes; i++)
+        {
+            if(nodesArray[i]->GetSaturationDegree() == max)
+            {
+                maximalSaturation->push_back(nodesArray[i]);
+            }
+        }
+        return maximalSaturation;
+    }
+
     void Dsatur(int tmax)
     {
         int cantColoreados = 0;
         setColorDsatur(nodesDegreeSortedArray[0]->GetLabel(), 1);
-
         while(cantColoreados < numNodes)
         {
 
@@ -200,6 +223,7 @@ private:
     GraphNode** nodesArray;
     GraphNode** nodesDegreeSortedArray;
     int numNodes;
+    int numColored;
     int m;
 
     void sortAdjacentNodes()
