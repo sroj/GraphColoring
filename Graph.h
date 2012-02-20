@@ -182,7 +182,7 @@ public:
             bool found=false;
             for(unsigned int j=0; j< adjacentNeighbors->size(); j++)
             {
-                if((*adjacentNeighbors)[j]->GetLabel() != node_label && (*adjacentNeighbors)[j]->GetColor() == getColor(node_label))
+                if((*adjacentNeighbors)[j]->GetLabel() != node_label && (*adjacentNeighbors)[j]->GetColor() == getColor(node_label) && !found)
                 {
                     found = true;
                 }
@@ -247,6 +247,7 @@ public:
             {
                 int label = maximalSaturation->front()->GetLabel();
                 int minColor = GetMinimumFeasibleColor(label);
+              //  cout << minColor << ", "  << label << endl;
                 setColorDsatur(label, minColor);
             }
             else
@@ -262,6 +263,7 @@ public:
                     }
                 }
                 int minColor = GetMinimumFeasibleColor(maxDegreeLabel);
+              //  cout << minColor << ", "  << maxDegreeLabel << endl;
                 setColorDsatur(maxDegreeLabel, minColor);
             }
         }
