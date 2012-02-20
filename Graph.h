@@ -239,9 +239,8 @@ public:
 
     void Dsatur(int tmax)
     {
-        int cantColoreados = 0;
         setColorDsatur(nodesDegreeSortedArray[0]->GetLabel(), 1);
-        while(cantColoreados < numNodes)
+        while(numColored < numNodes)
         {
             const vector<GraphNode*>* maximalSaturation = MaximalSaturationDegree();
             if(maximalSaturation->size()==1)
