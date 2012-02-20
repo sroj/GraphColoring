@@ -108,7 +108,7 @@ public:
 
         for(int i = 0; i < numNodes; i++)
         {
-            nodesDegreeSortedArray[i] = nodesArray[other.nodesDegreeSortedArray[i]->GetLabel()];
+            nodesDegreeSortedArray[i] = nodesArray[other.nodesDegreeSortedArray[i]->GetLabel() - 1];
         }
 
         for(int i = 0; i < numNodes; i++)
@@ -118,7 +118,7 @@ public:
 
             for(unsigned int j = 0; j < vectorSize; j++)
             {
-                adjacencyArray[i]->push_back(nodesArray[(adjacentNodes->at(j))->GetLabel()]);
+                adjacencyArray[i]->push_back(nodesArray[(adjacentNodes->at(j))->GetLabel() - 1]);
             }
         }
     }
@@ -135,30 +135,28 @@ public:
 
     const vector<GraphNode*>* neighbors(int node_label)
     {
-        if (node_label > 0 && node_label <= numNodes)
-        {
-            return adjacencyArray[node_label - 1];
-        }
-        else
+        if (node_label <= 0 || node_label > numNodes)
         {
             throw string("Etiqueta de nodo invalida en Graph::Neighbors");
         }
+        return adjacencyArray[node_label - 1];
     }
 
     void setColor(int node_label, int color)
     {
-        if (node_label > 0 && node_label <= numNodes)
-        {
-            nodesArray[node_label - 1]->SetColor(color);
-        }
-        else
+        if (node_label <= 0 || node_label > numNodes)
         {
             throw string("Etiqueta de nodo invalida en Graph::SetColor");
         }
+        nodesArray[node_label - 1]->SetColor(color);
     }
 
     int getColor(int node_label)
     {
+        if (node_label <= 0 || node_label > numNodes)
+        {
+            throw string("Etiqueta de nodo invalida en Graph::getColor");
+        }
         return nodesArray[node_label - 1]->GetColor();
     }
 
@@ -217,6 +215,34 @@ private:
         {
             adjacencyArray[i] = new vector<GraphNode*>;
         }
+    }
+
+    int GetMinimumFeasibleColor(int node_label, int color)
+    {
+        if (node_label <= 0 || node_label > numNodes)
+        {
+            throw string("Etiqueta de nodo invalida en Graph::GetMinimumFeasibleColor");
+        }
+
+        bool adjacentColors[numNodes];
+        bool * colorMinimo;
+
+        for(int i = 0; i < numNodes; i++)
+            adjacentColors[i] = false;
+
+        vector<GraphNode*> * adjacentNodes = adjacencyArray[node_label - 1];
+        vector<GraphNode*>::iterator it;
+
+        for(it = (adjacentNodes->begin()); it < adjacentNodes->end(); it++)
+        {
+            adjacentColors[((*it)->GetColor()) - 1] = true;
+        }
+
+        if ((colorMinimo = find(adjacentColors, adjacentColors + numNodes, false))
+                < adjacentColors + numNodes)
+            return colorMinimo - adjacentColors + 1;
+        else
+            throw string("No se encontro un color minimo valido");
     }
 };
 
