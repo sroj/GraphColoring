@@ -301,7 +301,7 @@ private:
                 < adjacentColors + numNodes)
             return colorMinimo - adjacentColors + 1;
         else
-            throw string("No se encontro un color minimo valido");
+            return 0;
     }
 };
 
