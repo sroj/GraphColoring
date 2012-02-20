@@ -71,6 +71,7 @@ public:
                     token = strtok(NULL, " ");
                 }
             }
+            uncoloredNodes = new list<GraphNode*> (nodesArray, nodesArray + numNodes);
             instancia.close();
             sortNodesByDegree();
             sortAdjacentNodes();
@@ -88,6 +89,7 @@ public:
             delete(adjacencyArray[i]);
             delete(nodesArray[i]);
         }
+        delete uncoloredNodes;
         delete[] nodesDegreeSortedArray;
         delete[] adjacencyArray;
         delete[] nodesArray;
@@ -210,18 +212,18 @@ public:
         vector<GraphNode*>* maximalSaturation = new vector<GraphNode*>;
         int max = 0;
 
-        for(int i=0; i<numNodes; i++)
+        for (list<GraphNode*>::iterator it = uncoloredNodes->begin(); it != uncoloredNodes->end(); it++)
         {
-            if(nodesArray[i]->GetSaturationDegree() > max)
+            if((*it)->GetSaturationDegree() > max)
             {
-                max = nodesArray[i]->GetSaturationDegree();
+                max = (*it)->GetSaturationDegree();
             }
         }
-        for(int i=0; i<numNodes; i++)
+        for (list<GraphNode*>::iterator it = uncoloredNodes->begin(); it != uncoloredNodes->end(); it++)
         {
-            if(nodesArray[i]->GetSaturationDegree() == max)
+            if((*it)->GetSaturationDegree() == max)
             {
-                maximalSaturation->push_back(nodesArray[i]);
+                maximalSaturation->push_back(*it);
             }
         }
         return maximalSaturation;
@@ -229,10 +231,17 @@ public:
 
     void Dsatur(int tmax)
     {
+
         int cantColoreados = 0;
         setColorDsatur(nodesDegreeSortedArray[0]->GetLabel(), 1);
         while(cantColoreados < numNodes)
         {
+            const vector<GraphNode*>* maximalSaturation = MaximalSaturationDegree();
+
+            if(maximalSaturation->size()==1)
+            {
+
+            }
 
         }
     }
@@ -250,6 +259,7 @@ private:
     int numNodes;
     int numColored;
     int numEdges;
+    list<GraphNode*> * uncoloredNodes;
 
     void sortAdjacentNodes()
     {
