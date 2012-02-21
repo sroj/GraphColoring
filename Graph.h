@@ -66,6 +66,7 @@ public:
                     nodesArray = new GraphNode* [numNodes];
                     adjacencyArray = new vector<GraphNode*>* [numNodes];
                     nodesDegreeSortedArray = new GraphNode* [numNodes];
+                    finalColorationBrown = new GraphNode* [numNodes];
                     initializeNodesArrays();
                     initializeAdjancencyArray();
                     primeraLineaLeida = true;
@@ -92,6 +93,7 @@ public:
         delete[] nodesDegreeSortedArray;
         delete[] adjacencyArray;
         delete[] nodesArray;
+        delete[] finalColorationBrown;
     }
 
     //Copy-constructor
@@ -326,9 +328,45 @@ public:
         return (double)(endTime2 - startTime2)/(double)CLOCKS_PER_SEC;
     }
 
-    void Brown(int tmax)
+    double Brown(int tmax)
     {
-        asignarColoracionInicialBrown();
+        clock_t startTime = clock();
+        int nodeLabel = numNodes;
+        int bestNumColors = initialColoration();
+        bool backtracking = false;
+
+        while(nodeLabel>=1)
+        {
+            //Terminar la ejecucion del metodo si se excede del tiempo máximo
+            if(((clock() - startTime)/(double)CLOCKS_PER_SEC) >= (double)tmax)
+                return -1;
+
+            if (!backtracking)
+                nodeLabel = findByColor(bestNumColors) - 1;
+
+            if(!tryNewColor(nodeLabel, bestNumColors))
+            {
+                nodeLabel--;
+                backtracking = true;
+                continue;
+            }
+
+            resetColoration(nodeLabel + 1);
+            nodeLabel = colorForward(nodeLabel + 1, &bestNumColors);
+
+            if(nodeLabel == numNodes)
+            {
+                backtracking = false;
+                continue;
+            }
+            else
+            {
+                backtracking = true;
+                continue;
+            }
+        }
+        memcpy(nodesArray, finalColorationBrown, numNodes * sizeof(GraphNode*));
+        return (clock() - startTime)/(double)CLOCKS_PER_SEC;
     }
 
 private:
@@ -336,6 +374,7 @@ private:
     vector<GraphNode*> **adjacencyArray;
     GraphNode** nodesArray;
     GraphNode** nodesDegreeSortedArray;
+    GraphNode** finalColorationBrown;
     int numNodes;
     int numColored;
     int numEdges;
@@ -343,6 +382,7 @@ private:
 
     void sortAdjacentNodes()
     {
+
     }
 
     void sortNodesByDegree()
@@ -398,15 +438,127 @@ private:
             return 0;
     }
 
-    void asignarColoracionInicialBrown()
+    int GetMinimumAlternativeColor(int node_label)
     {
-        int color;
+        if (node_label <= 0 || node_label > numNodes)
+        {
+            throw string("Etiqueta de nodo invalida en Graph::GetMinimumFeasibleColor");
+        }
+        cout << "Intentando color alternativo para nodo: " << node_label << endl;
+
+        bool adjacentColors[numNodes];
+        bool * colorMinimo;
+        int color = 0;
+        int currentColor = nodesArray[node_label - 1]->GetColor();
+        cout << "Su color actual es: " << currentColor << endl;
 
         for(int i = 0; i < numNodes; i++)
+            adjacentColors[i] = false;
+
+        vector<GraphNode*> * adjacentNodes = adjacencyArray[node_label - 1];
+
+        for(unsigned int i = 0; i < adjacentNodes->size(); i++)
+        {
+            if(((*adjacentNodes)[i])->GetLabel() < node_label)
+            {
+                color = ((*adjacentNodes)[i])->GetColor();
+                if (color > 0)
+                    adjacentColors[color - 1] = true;
+            }
+        }
+
+        if ((colorMinimo =
+                    find(adjacentColors + currentColor,
+                         adjacentColors + numNodes, false))
+                < adjacentColors + numNodes)
+            return colorMinimo - adjacentColors + 1;
+        else
+            return 0;
+    }
+
+    int initialColoration()
+    {
+        int color = 0;
+        nodesArray[0]->SetColor(1);
+        int initialNumColors = 1;
+
+        for(int i = 1; i < numNodes; i++)
         {
             if ((color = GetMinimumFeasibleColor(i + 1)) == 0)
                 throw string("No se pudo completar la coloracion inicial");
             nodesArray[i]->SetColor(color);
+            if(color > initialNumColors)
+                initialNumColors = color;
+        }
+        copyNodesArray();
+        return initialNumColors;
+    }
+
+    int findByColor(int color)
+    {
+        for(int i = 0; i < numNodes; i++)
+        {
+            if(nodesArray[i]->GetColor() == color)
+                return i + 1;
+        }
+        throw string("No se encontro el color"
+                     " especificado en el metodo findByColor");
+    }
+
+    void resetColoration(int initialPosition)
+    {
+        for(int i = initialPosition - 1; i < numNodes; i++)
+        {
+            nodesArray[i]->SetColor(0);
+        }
+    }
+
+    bool tryNewColor(int nodeLabel, int bestNumColors)
+    {
+        int alternativeColor = GetMinimumAlternativeColor(nodeLabel);
+        cout<< "Color alternativo encontrado: " << alternativeColor << endl;
+        if (alternativeColor < bestNumColors)
+        {
+            setColor(nodeLabel, alternativeColor);
+            return true;
+        }
+        return false;
+    }
+
+    int colorForward(int nodeLabel, int* bestNumColors)
+    {
+        int color = 0;
+        int i;
+        for(i = nodeLabel - 1; i < numNodes; i++)
+        {
+            if ((color = GetMinimumFeasibleColor(i + 1)) == 0)
+                throw string("No se pudo completar la coloracion");
+            if (color >= *bestNumColors)
+                break;
+            nodesArray[i]->SetColor(color);
+        }
+        if(i == numNodes)
+        {
+            int max = 0;
+            int currentColor;
+            for (int j= 0; j < numNodes; j++)
+            {
+                currentColor = nodesArray[j]->GetColor();
+                if (currentColor > max)
+                    max = currentColor;
+            }
+            *bestNumColors = max;
+            copyNodesArray();
+            return numNodes;
+        }
+        return i;
+    }
+
+    void copyNodesArray()
+    {
+        for(int i = 0; i < numNodes; i++)
+        {
+            finalColorationBrown[i] = new GraphNode(*(nodesArray[i]));
         }
     }
 };
