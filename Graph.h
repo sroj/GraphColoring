@@ -178,8 +178,8 @@ public:
         {
             //if(nodesArray[node_label-1]->GetColor() == 0)
             //{
-                numColored++;
-                nodesArray[node_label - 1]->SetColor(color);
+            numColored++;
+            nodesArray[node_label - 1]->SetColor(color);
             //}
             bool encontrado = false;
 
@@ -191,12 +191,14 @@ public:
                     encontrado = true;
                 }
             }
-                            for (list<GraphNode*>::iterator it = uncoloredNodes->begin();
+            /*
+            for (list<GraphNode*>::iterator it = uncoloredNodes->begin();
                     it != uncoloredNodes->end(); it++)
-                    {
-                        cout << (*it)->GetLabel() << " ";
-                    }
-cout << "\n";
+            {
+                cout << (*it)->GetLabel() << " ";
+            }
+            cout << "\n";
+            */
         }
         else
         {
@@ -222,7 +224,7 @@ cout << "\n";
             if(!found)
             {
                 nodesArray[(*adjacents)[i]->GetLabel() - 1]->
-                    IncrementSaturationDegree();
+                IncrementSaturationDegree();
             }
         }
     }
@@ -358,7 +360,7 @@ cout << "\n";
             }
             else
             {
-                int maxDegreeLabel;
+                int maxDegreeLabel = 0;
                 int maxDegree = 0;
                 for(unsigned int i=0; i< maximalSaturation->size(); i++)
                 {
@@ -369,7 +371,7 @@ cout << "\n";
                     }
                 }
                 int minColor = GetMinimumFeasibleColor(maxDegreeLabel);
-                cout << maxDegreeLabel << ", " << minColor << "\n";
+                //cout << maxDegreeLabel << ", " << minColor << "\n";
                 if(minColor==0)
                 {
                     throw string("Error en minima coloración");
@@ -517,13 +519,11 @@ private:
         {
             throw string("Etiqueta de nodo invalida en Graph::GetMinimumFeasibleColor");
         }
-        cout << "Intentando color alternativo para nodo: " << node_label << endl;
 
         bool adjacentColors[numNodes];
         bool * colorMinimo;
         int color = 0;
         int currentColor = nodesArray[node_label - 1]->GetColor();
-        cout << "Su color actual es: " << currentColor << endl;
 
         for(int i = 0; i < numNodes; i++)
             adjacentColors[i] = false;
@@ -589,7 +589,6 @@ private:
     bool tryNewColor(int nodeLabel, int bestNumColors)
     {
         int alternativeColor = GetMinimumAlternativeColor(nodeLabel);
-        cout<< "Color alternativo encontrado: " << alternativeColor << endl;
         if (alternativeColor < bestNumColors)
         {
             setColor(nodeLabel, alternativeColor);

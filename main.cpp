@@ -16,7 +16,7 @@ int main(int argc, char **argv)
 {
     if (argc >= 2 && argc <= 5)
     {
-        algoritmo_t algoritmo = dsatur; // 0-> Dsatur 1-> Brown
+        algoritmo_t algoritmo = dsatur;
         int tmax = 15 * 60;
 
         for (int i = 1; i < argc - 1; i++)
@@ -47,13 +47,13 @@ int main(int argc, char **argv)
         {
             int contadorArchivos=0;
             double sumaTiempo=0;
-            int coloresMin;
+            int coloresMin = 0;
             int sumaColores=0;
             int cantExcedido=0;
             double executionTime;
             for(int i=1; i<=60;i++)
             {
-                char nombreArchivo[3];
+                char nombreArchivo[12];
                 sprintf (nombreArchivo, "%d", i);
                 Graph grafo(nombreArchivo);
                 contadorArchivos++;
@@ -78,6 +78,7 @@ int main(int argc, char **argv)
             sumaTiempo= sumaTiempo+ executionTime;
             sumaColores = sumaColores + coloresMin;
             grafo.printOutput(cout, executionTime);
+
             if(contadorArchivos==3)
             {
                 ofstream archivoGenerado;
