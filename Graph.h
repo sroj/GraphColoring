@@ -4,8 +4,10 @@
 #include <list>
 #include <vector>
 #include <iostream>
+#include <ostream>
 #include <fstream>
 #include <string>
+#include <ctime>
 #include <algorithm>
 #include "GraphNode.h"
 #include "CompareDegreeFunctor.h"
@@ -203,15 +205,25 @@ public:
         return nodesArray[node_label - 1]->GetColor();
     }
 
+    void printOutput(ostream& output, double time)
+    {
+        output.precision(8);
+        output << "Tiempo de ejecucion: " << fixed << time << "\n";
+        output << "Numero de colores encontrados: " << getNumberOfColors() << "\n";
+        output << "Vertice\tColor\n";
+        for (int i = 0; i < numNodes; i++)
+        {
+            output << i + 1 << "\t" << nodesArray[i]->GetColor() << "\n";
+        }
+    }
+
     void printCurrentColoring()
     {
-        cout << "Vertice\tColor\tGrado\tEtiqueta\n";
+        cout << "Vertice\tColor\n";
         for (int i = 0; i < numNodes; i++)
         {
             cout << i + 1 << "\t"
-                 << nodesArray[i]->GetColor() << "\t"
-                 << nodesDegreeSortedArray[i]->GetDegree() << "\t"
-                 << nodesDegreeSortedArray[i]->GetLabel() << "\n";
+                 << nodesArray[i]->GetColor() << "\n";
         }
     }
 
@@ -226,7 +238,6 @@ public:
             for (unsigned int j = 0; j < adjacents->size(); j++)
             {
                 cout << "Etiqueta: " << (*adjacents)[j]->GetLabel() << " Color:" << (*adjacents)[j]->GetColor() << endl;
-
             }
             cout << "\n";
         }
@@ -254,8 +265,29 @@ public:
         return maximalSaturation;
     }
 
-    void Dsatur(int tmax)
+    int getNumberOfColors()
     {
+        int max=0;
+        for(int i=0; i<numNodes; i++)
+        {
+            if(nodesArray[i]->GetColor()>max)
+            {
+                max = nodesArray[i]->GetColor();
+            }
+        }
+        return max;
+    }
+
+    double Dsatur(int tmax)
+    {
+        time_t insideTime;
+        time_t startTime;
+        time_t endTime;
+        clock_t startTime2 = clock();
+        clock_t endTime2;
+
+        time(&startTime);
+        cout << startTime2 << "\n";
         setColorDsatur(nodesDegreeSortedArray[0]->GetLabel(), 1);
         while(numColored < numNodes)
         {
@@ -264,7 +296,6 @@ public:
             {
                 int label = maximalSaturation->front()->GetLabel();
                 int minColor = GetMinimumFeasibleColor(label);
-              //  cout << minColor << ", "  << label << endl;
                 setColorDsatur(label, minColor);
             }
             else
@@ -280,10 +311,19 @@ public:
                     }
                 }
                 int minColor = GetMinimumFeasibleColor(maxDegreeLabel);
-              //  cout << minColor << ", "  << maxDegreeLabel << endl;
                 setColorDsatur(maxDegreeLabel, minColor);
             }
+            time(&insideTime);
+            if(difftime(insideTime,startTime)>= tmax)
+            {
+                throw string("Tiempo de ejecucion excedido");
+            }
         }
+
+        time(&endTime);
+        endTime2 = clock();
+        cout << endTime2 << "\n";
+        return (double)(endTime2 - startTime2)/(double)CLOCKS_PER_SEC;
     }
 
     void Brown(int tmax)

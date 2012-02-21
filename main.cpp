@@ -14,7 +14,8 @@ enum algoritmo_t
 
 int main(int argc, char **argv)
 {
-
+clock_t startTime2 = clock();
+ cout << "clock al main: " << startTime2 << "\n";
     if (argc >= 2 && argc <= 5)
     {
         algoritmo_t algoritmo = dsatur; // 0-> Dsatur 1-> Brown
@@ -46,16 +47,18 @@ int main(int argc, char **argv)
 
         try
         {
+            double executionTime;
             Graph grafo(argv[argc - 1]);
             if (algoritmo == dsatur)
             {
-                grafo.Dsatur(tmax);
+                executionTime = grafo.Dsatur(tmax);
             }
             else
             {
                 grafo.Brown(tmax);
             }
-            grafo.printCurrentColoring();
+            //grafo.printCurrentColoring();
+            grafo.printOutput(cout, executionTime);
         }
         catch (string mensaje)
         {
@@ -68,5 +71,7 @@ int main(int argc, char **argv)
         cout << ("El numero de argumentos es incorrecto");
         return EXIT_FAILURE;
     }
+    clock_t endTime2 = clock();
+    cout << "Tiempo final: " << endTime2 << "\n";
     return EXIT_SUCCESS;
 }
