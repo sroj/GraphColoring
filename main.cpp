@@ -14,8 +14,6 @@ enum algoritmo_t
 
 int main(int argc, char **argv)
 {
-clock_t startTime2 = clock();
- cout << "clock al main: " << startTime2 << "\n";
     if (argc >= 2 && argc <= 5)
     {
         algoritmo_t algoritmo = dsatur; // 0-> Dsatur 1-> Brown
@@ -47,18 +45,59 @@ clock_t startTime2 = clock();
 
         try
         {
+            int contadorArchivos=0;
+            double sumaTiempo=0;
+            int coloresMin;
+            int sumaColores=0;
+            int cantExcedido=0;
             double executionTime;
-            Graph grafo(argv[argc - 1]);
+            for(int i=1; i<=60;i++)
+            {
+                char nombreArchivo[3];
+                sprintf (nombreArchivo, "%d", i);
+                Graph grafo(nombreArchivo);
+                contadorArchivos++;
+            //Graph grafo(argv[argc - 1]);
             if (algoritmo == dsatur)
             {
                 executionTime = grafo.Dsatur(tmax);
             }
             else
             {
-                grafo.Brown(tmax);
+                executionTime = grafo.Brown(tmax);
+
             }
-            //grafo.printCurrentColoring();
+            if(executionTime !=-1)
+            {
+                coloresMin = grafo.getNumberOfColors();
+            }
+            else
+            {
+                cantExcedido++;
+            }
+            sumaTiempo= sumaTiempo+ executionTime;
+            sumaColores = sumaColores + coloresMin;
             grafo.printOutput(cout, executionTime);
+            if(contadorArchivos==3)
+            {
+                ofstream archivoGenerado;
+                strcat(nombreArchivo,".out");
+                archivoGenerado.open (nombreArchivo);
+                if (archivoGenerado.is_open())
+                {
+                    archivoGenerado << "colores promedio: " << (double)sumaColores/3.0 << "\n";
+                    archivoGenerado << "tiempo promedio: " << (double)sumaTiempo/3.0 << "\n";
+                    archivoGenerado << "cuantos con time out: " << cantExcedido << "\n";
+                    archivoGenerado.close();
+                }
+                contadorArchivos=0;
+                sumaColores =0;
+                sumaTiempo=0;
+                cantExcedido=0;
+            }
+
+            }
+
         }
         catch (string mensaje)
         {
@@ -71,7 +110,5 @@ clock_t startTime2 = clock();
         cout << ("El numero de argumentos es incorrecto");
         return EXIT_FAILURE;
     }
-    clock_t endTime2 = clock();
-    cout << "Tiempo final: " << endTime2 << "\n";
     return EXIT_SUCCESS;
 }

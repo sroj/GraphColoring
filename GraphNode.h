@@ -9,6 +9,7 @@ public:
     {
     };
 
+    //Copy constructor
     GraphNode(const GraphNode& orig)
     {
         color = orig.color;

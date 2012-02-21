@@ -19,7 +19,7 @@ class Graph
 {
 public:
 
-    Graph(const char path[])
+    Graph(char path[])
     {
         int u;
         int v;
@@ -111,7 +111,8 @@ public:
 
         for(int i = 0; i < numNodes; i++)
         {
-            nodesDegreeSortedArray[i] = nodesArray[other.nodesDegreeSortedArray[i]->GetLabel() - 1];
+            nodesDegreeSortedArray[i] =
+                nodesArray[other.nodesDegreeSortedArray[i]->GetLabel() - 1];
         }
 
         for(int i = 0; i < numNodes; i++)
@@ -126,6 +127,10 @@ public:
         }
     }
 
+    //Recibe dos etiquetas de nodos y almacena en la lista de adyacencia del
+    //nodo "u", el apuntador al nodo "v" y en la lista de adyacencia del nodo
+    //"v" almacena el apuntador al nodo con etiqueta "u". Además incrementa el
+    //grado de ambos nodos.
     void addArc(int u, int v)
     {
         (adjacencyArray[u - 1])->push_back(nodesArray[v - 1]);
@@ -136,6 +141,8 @@ public:
         ++(*(nodesArray[v - 1]));
     }
 
+    //Recibe la etiqueta de un nodo y retorna un vector con apuntadores a los
+    //nodos adyacentes a ese nodo.
     const vector<GraphNode*>* neighbors(int node_label)
     {
         if (node_label <= 0 || node_label > numNodes)
@@ -145,6 +152,9 @@ public:
         return adjacencyArray[node_label - 1];
     }
 
+    //Recibe la etiqueta de un nodo y el color que se desea utilizar para
+    //colorearlo. Este método invoca el método setColor(Color) de la clase
+    //GraphNode.
     void setColor(int node_label, int color)
     {
         if (node_label <= 0 || node_label > numNodes)
@@ -154,12 +164,21 @@ public:
         nodesArray[node_label - 1]->SetColor(color);
     }
 
+    //Este método se utiliza únicamente para colorear nodos en el algoritmo
+    //Dsatur. Recibe la etiqueta de un nodo y el color con el que se desea
+    //colorear el nodo. Elimina de la lista de nodos no coloreados
+    //(uncoloredNodes) el apuntador al nodo que se coloreó. Luego revisa
+    //grado de saturación de los nodos adyacentes a este y lo incrementa
+    //si corresponde.
     void setColorDsatur(int node_label, int color)
     {
         if (node_label > 0 && node_label <= numNodes)
         {
-            nodesArray[node_label - 1]->SetColor(color);
-            numColored++;
+            //if(nodesArray[node_label-1]->GetColor() == 0)
+            //{
+                numColored++;
+                nodesArray[node_label - 1]->SetColor(color);
+            //}
             bool encontrado = false;
 
             for (list<GraphNode*>::iterator it = uncoloredNodes->begin(); it != uncoloredNodes->end() && !encontrado; it++)
@@ -170,6 +189,12 @@ public:
                     encontrado = true;
                 }
             }
+                            for (list<GraphNode*>::iterator it = uncoloredNodes->begin();
+                    it != uncoloredNodes->end(); it++)
+                    {
+                        cout << (*it)->GetLabel() << " ";
+                    }
+cout << "\n";
         }
         else
         {
@@ -180,22 +205,29 @@ public:
 
         for(unsigned int i=0; i< adjacents->size(); i++)
         {
-            const vector<GraphNode*> *adjacentNeighbors = neighbors((*adjacents)[i]->GetLabel());
+            const vector<GraphNode*> *adjacentNeighbors =
+                neighbors((*adjacents)[i]->GetLabel());
             bool found=false;
             for(unsigned int j=0; j< adjacentNeighbors->size(); j++)
             {
-                if((*adjacentNeighbors)[j]->GetLabel() != node_label && (*adjacentNeighbors)[j]->GetColor() == getColor(node_label) && !found)
+                if((*adjacentNeighbors)[j]->GetLabel() != node_label &&
+                        (*adjacentNeighbors)[j]->GetColor() == getColor(node_label)
+                        && !found)
                 {
                     found = true;
                 }
             }
             if(!found)
             {
-                nodesArray[(*adjacents)[i]->GetLabel() - 1]->IncrementSaturationDegree();
+                nodesArray[(*adjacents)[i]->GetLabel() - 1]->
+                    IncrementSaturationDegree();
             }
         }
     }
 
+    //Este método recibe una etiqueta y devuelve el color en el que está
+    //coloreado el nodo al que corresponde la etiqueda. Hace uso del método
+    //getColor() de la clase GraphNode para colorear el nodo.
     int getColor(int node_label)
     {
         if (node_label <= 0 || node_label > numNodes)
@@ -205,11 +237,16 @@ public:
         return nodesArray[node_label - 1]->GetColor();
     }
 
+    //Este método recibe un objeto de tipo ostream (llamado output) y el tiempo
+    //de duración de la ejecución del algoritmo. Luego imprime donde indique la
+    //variable output los resultados de la ejecución del programa con una
+    //instancia en particular.
     void printOutput(ostream& output, double time)
     {
         output.precision(8);
         output << "Tiempo de ejecucion: " << fixed << time << "\n";
-        output << "Numero de colores encontrados: " << getNumberOfColors() << "\n";
+        output << "Numero de colores encontrados: " << getNumberOfColors()
+        << "\n";
         output << "Vertice\tColor\n";
         for (int i = 0; i < numNodes; i++)
         {
@@ -237,25 +274,33 @@ public:
             adjacents = adjacencyArray[i];
             for (unsigned int j = 0; j < adjacents->size(); j++)
             {
-                cout << "Etiqueta: " << (*adjacents)[j]->GetLabel() << " Color:" << (*adjacents)[j]->GetColor() << endl;
+                cout << "Etiqueta: " << (*adjacents)[j]->GetLabel() << " Color:"
+                     << (*adjacents)[j]->GetColor() << endl;
             }
             cout << "\n";
         }
     }
 
+    //Este método retorna un apuntador a un vector que contiene apuntadores a
+    //el/los nodo(s) no coloreados con grado de saturación máxima. Para ello
+    //revisa en la lista unconloredNodes cuál es el máximo grado de saturación
+    //y luego guarda en el vector los nodos que tengan ese grado máximo de
+    //saturación.
     const vector<GraphNode*>* MaximalSaturationDegree()
     {
         vector<GraphNode*>* maximalSaturation = new vector<GraphNode*>;
         int max = 0;
 
-        for (list<GraphNode*>::iterator it = uncoloredNodes->begin(); it != uncoloredNodes->end(); it++)
+        for (list<GraphNode*>::iterator it = uncoloredNodes->begin();
+                it != uncoloredNodes->end(); it++)
         {
             if((*it)->GetSaturationDegree() > max)
             {
                 max = (*it)->GetSaturationDegree();
             }
         }
-        for (list<GraphNode*>::iterator it = uncoloredNodes->begin(); it != uncoloredNodes->end(); it++)
+        for (list<GraphNode*>::iterator it = uncoloredNodes->begin();
+                it != uncoloredNodes->end(); it++)
         {
             if((*it)->GetSaturationDegree() == max)
             {
@@ -265,6 +310,8 @@ public:
         return maximalSaturation;
     }
 
+    //Esta función revisa en el grafo cuál es el color más alto en el que estan
+    //coloreados los nodos y retorna ese número.
     int getNumberOfColors()
     {
         int max=0;
@@ -278,24 +325,33 @@ public:
         return max;
     }
 
+    //Esta función recibe el tiempo máximo de ejecución del algoritmo Dsatur.
+    //Retorna un double que representa el tiempo que se tardó el algoritmo en
+    //ejecurarse. La función está basada en la heurística Dsatur, que permite
+    //obtener una solución aproximada al problema de coloración con un esfuerzo
+    //computacional bajo. Si el tiempo de ejecución en algún momento excede el
+    //tiempo máximo que recibió la función, el programa aborta.
     double Dsatur(int tmax)
     {
-        time_t insideTime;
-        time_t startTime;
-        time_t endTime;
-        clock_t startTime2 = clock();
-        clock_t endTime2;
+        clock_t startTime = clock();
+        clock_t endTime;
+        clock_t insideTime;
 
-        time(&startTime);
-        cout << startTime2 << "\n";
         setColorDsatur(nodesDegreeSortedArray[0]->GetLabel(), 1);
         while(numColored < numNodes)
         {
-            const vector<GraphNode*>* maximalSaturation = MaximalSaturationDegree();
+            const vector<GraphNode*>* maximalSaturation =
+                MaximalSaturationDegree();
             if(maximalSaturation->size()==1)
             {
                 int label = maximalSaturation->front()->GetLabel();
                 int minColor = GetMinimumFeasibleColor(label);
+                cout << label << ", " << minColor << "\n";
+
+                if(minColor==0)
+                {
+                    throw string("Error en minima coloración");
+                }
                 setColorDsatur(label, minColor);
             }
             else
@@ -311,19 +367,22 @@ public:
                     }
                 }
                 int minColor = GetMinimumFeasibleColor(maxDegreeLabel);
+                cout << maxDegreeLabel << ", " << minColor << "\n";
+                if(minColor==0)
+                {
+                    throw string("Error en minima coloración");
+                }
                 setColorDsatur(maxDegreeLabel, minColor);
             }
-            time(&insideTime);
-            if(difftime(insideTime,startTime)>= tmax)
+            insideTime =clock();
+            if((double)(insideTime - startTime)/(double)CLOCKS_PER_SEC>= tmax)
             {
-                throw string("Tiempo de ejecucion excedido");
+                return(-1);
             }
+            delete maximalSaturation;
         }
-
-        time(&endTime);
-        endTime2 = clock();
-        cout << endTime2 << "\n";
-        return (double)(endTime2 - startTime2)/(double)CLOCKS_PER_SEC;
+        endTime = clock();
+        return (double)(endTime - startTime)/(double)CLOCKS_PER_SEC;
     }
 
     void Brown(int tmax)
@@ -345,12 +404,15 @@ private:
     {
     }
 
+    //este método arregla los apuntadores a nodos según su grado (de mayor grado
+    //a menor grado)
     void sortNodesByDegree()
     {
         CompareDegreeFunctor comparer;
-        sort(nodesDegreeSortedArray, nodesDegreeSortedArray + numNodes,  comparer);
+        sort(nodesDegreeSortedArray, nodesDegreeSortedArray+numNodes, comparer);
     }
 
+    //Este método inicializa el nodesArray colocandole las etiquetas a cada nodo.
     void initializeNodesArrays()
     {
         for (int i = 0; i < numNodes; i++)
@@ -360,6 +422,9 @@ private:
         }
     }
 
+    //Este método se utiliza para inicializar el arreglo de adyacencias,
+    //asignándole un vector a cada posición, donde estarán contidos los nodos
+    //adyacentes.
     void initializeAdjancencyArray()
     {
         for (int i = 0; i < numNodes; i++)
@@ -368,6 +433,14 @@ private:
         }
     }
 
+    //Esta función recibe la etiqueta de un nodo y retorna un entero que
+    //representa el mínimo color con el que se puede colorear dicho nodo.
+    //Revisa en la lista de adyacencia en la posición del nodo con esa etiqueta
+    //y marca como utilizados los colores de los vecinos del nodo, de esta
+    //manera se sabe de qué colores no puede ser coloreado el grafo. Luego
+    //a partir del número uno, si se puede colorear con ese color, de no ser así,
+    //revisa si puede colorearlo de color 2, y así sucesivamente hasta que
+    //encuentra el mínimo color posible.
     int GetMinimumFeasibleColor(int node_label)
     {
         if (node_label <= 0 || node_label > numNodes)
@@ -412,3 +485,4 @@ private:
 };
 
 #endif
+
