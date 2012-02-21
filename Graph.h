@@ -358,7 +358,7 @@ cout << "\n";
             }
             else
             {
-                int maxDegreeLabel;
+                int maxDegreeLabel = 0;
                 int maxDegree = 0;
                 for(unsigned int i=0; i< maximalSaturation->size(); i++)
                 {
@@ -369,7 +369,7 @@ cout << "\n";
                     }
                 }
                 int minColor = GetMinimumFeasibleColor(maxDegreeLabel);
-                cout << maxDegreeLabel << ", " << minColor << "\n";
+                //cout << maxDegreeLabel << ", " << minColor << "\n";
                 if(minColor==0)
                 {
                     throw string("Error en minima coloración");
