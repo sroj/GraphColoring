@@ -52,55 +52,56 @@ int main(int argc, char **argv)
             int sumaColores=0;
             int cantExcedido=0;
             double executionTime;
-            for(int i=1; i<=60;i++)
+            for(int i=1; i<=60; i++)
             {
                 char nombreArchivo[12];
                 sprintf (nombreArchivo, "%d", i);
                 Graph grafo(nombreArchivo);
                 contadorArchivos++;
-            //Graph grafo(argv[argc - 1]);
-            if (algoritmo == dsatur)
-            {
-                executionTime = grafo.Dsatur(tmax);
-            }
-            else
-            {
-                executionTime = grafo.Brown(tmax);
-
-            }
-            if(executionTime !=-1)
-            {
-                coloresMin = grafo.getNumberOfColors();
-            }
-            else
-            {
-                cantExcedido++;
-            }
-            sumaTiempo= sumaTiempo+ executionTime;
-            sumaColores = sumaColores + coloresMin;
-            grafo.printOutput(cout, executionTime);
-
-            if(contadorArchivos==3)
-            {
-                ofstream archivoGenerado;
-                strcat(nombreArchivo,".out");
-                archivoGenerado.open (nombreArchivo);
-                if (archivoGenerado.is_open())
+                //Graph grafo(argv[argc - 1]);
+                if (algoritmo == dsatur)
                 {
-                    archivoGenerado << "colores promedio: " << (double)sumaColores/3.0 << "\n";
-                    archivoGenerado << "tiempo promedio: " << (double)sumaTiempo/3.0 << "\n";
-                    archivoGenerado << "cuantos con time out: " << cantExcedido << "\n";
-                    archivoGenerado.close();
+                    executionTime = grafo.Dsatur(tmax);
                 }
                 else
                 {
-                    throw string("archivoooo2");
+                    executionTime = grafo.Brown(tmax);
+
                 }
-                contadorArchivos=0;
-                sumaColores =0;
-                sumaTiempo=0;
-                cantExcedido=0;
-            }
+                if(executionTime !=-1)
+                {
+                    coloresMin = grafo.getNumberOfColors();
+                    sumaTiempo += executionTime;
+                    sumaColores += coloresMin;
+                    grafo.printOutput(cout, executionTime);
+                }
+                else
+                {
+                    cantExcedido++;
+                }
+
+
+                if(contadorArchivos==3)
+                {
+                    ofstream archivoGenerado;
+                    strcat(nombreArchivo,".out");
+                    archivoGenerado.open (nombreArchivo);
+                    if (archivoGenerado.is_open())
+                    {
+                        archivoGenerado << "colores promedio: " << (double)sumaColores/3.0 << "\n";
+                        archivoGenerado << "tiempo promedio: " << (double)sumaTiempo/3.0 << "\n";
+                        archivoGenerado << "cuantos con time out: " << cantExcedido << "\n";
+                        archivoGenerado.close();
+                    }
+                    else
+                    {
+                        throw string("archivoooo2");
+                    }
+                    contadorArchivos=0;
+                    sumaColores =0;
+                    sumaTiempo=0;
+                    cantExcedido=0;
+                }
 
             }
 
