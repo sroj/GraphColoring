@@ -329,7 +329,7 @@ public:
             else if(maximalSaturation->size()>1)
             {
                 int maxDegreeLabel = 0;
-                int maxDegree = 0;
+                int maxDegree = -1;
                 for(unsigned int i=0; i< maximalSaturation->size(); i++)
                 {
                     if((*maximalSaturation)[i]->GetDegree() > maxDegree)

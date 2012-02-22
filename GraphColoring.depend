@@ -1,4 +1,5 @@
 # depslib dependency file v1.0
+
 1329879872 source:/home/simonr/Documents/GraphColoring/main.cpp
 	<iostream>
 	<cstring>
