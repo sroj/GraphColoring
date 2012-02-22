@@ -251,7 +251,7 @@ public:
         {
             output << i + 1 << "\t" << nodesArray[i]->GetColor() << "\n";
         }
-        output << "-----------------------------------";
+        output << "-----------------------------------\n";
     }
 
     //Este método retorna un apuntador a un vector que contiene apuntadores a

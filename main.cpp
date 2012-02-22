@@ -28,18 +28,22 @@ int main(int argc, char **argv)
             else if (strcmp("-t", argv[i]) == 0)
             {
                 int t = atoi(argv[i + 1]);
-                if (t != 0)
+                if (t > 0)
                 {
                     tmax = t;
+                    i++;
                 }
                 else
                 {
-                    throw string("El valor indicado para el tiempo es incorrecto\n");
+                    cout << "El valor de tiempo indicado es invalido\n";
+                    cout << "Sintaxis correcta: gsc1 [opciones] <instancia>\n";
+                    return EXIT_FAILURE;
                 }
             }
             else if (strcmp("-d", argv[i]) != 0)
             {
-                throw string("Uno de los argumentos es invalido\n");
+                cout << "Sintaxis correcta: gsc1 [opciones] <instancia>\n";
+                return EXIT_FAILURE;
             }
         }
 
