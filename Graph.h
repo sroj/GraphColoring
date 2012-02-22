@@ -78,7 +78,6 @@ public:
         instancia.close();
         uncoloredNodes = new list<GraphNode*> (nodesArray, nodesArray + numNodes);
         sortNodesByDegree();
-        sortAdjacentNodes();
     }
 
 
@@ -88,6 +87,7 @@ public:
         {
             delete(adjacencyArray[i]);
             delete(nodesArray[i]);
+            delete(finalColorationBrown[i]);
         }
         delete uncoloredNodes;
         delete[] nodesDegreeSortedArray;
@@ -183,7 +183,8 @@ public:
             //}
             bool encontrado = false;
 
-            for (list<GraphNode*>::iterator it = uncoloredNodes->begin(); it != uncoloredNodes->end() && !encontrado; it++)
+            for (list<GraphNode*>::iterator it = uncoloredNodes->begin();
+                    it != uncoloredNodes->end() && !encontrado; it++)
             {
                 if((*it)->GetLabel() == node_label)
                 {
@@ -202,7 +203,7 @@ public:
         }
         else
         {
-            throw string("Etiqueta de nodo invalida en Graph::SetColor");
+            throw string("Etiqueta de nodo invalida en Graph::SetColorDsatur");
         }
 
         const vector<GraphNode*> *adjacents = neighbors(node_label);
@@ -248,7 +249,7 @@ public:
     void printOutput(ostream& output, double time)
     {
         output.precision(8);
-        output << "Tiempo de ejecucion: " << fixed << time << "\n";
+        output << "\nTiempo de ejecucion: " << fixed << time << "\n";
         output << "Numero de colores encontrados: " << getNumberOfColors()
         << "\n";
         output << "Vertice\tColor\n";
@@ -256,6 +257,7 @@ public:
         {
             output << i + 1 << "\t" << nodesArray[i]->GetColor() << "\n";
         }
+        output << endl;
     }
 
     void printCurrentColoring()
@@ -303,6 +305,7 @@ public:
                 max = (*it)->GetSaturationDegree();
             }
         }
+
         for (list<GraphNode*>::iterator it = uncoloredNodes->begin();
                 it != uncoloredNodes->end(); it++)
         {
@@ -318,10 +321,10 @@ public:
     //coloreados los nodos y retorna ese número.
     int getNumberOfColors()
     {
-        int max=0;
-        for(int i=0; i<numNodes; i++)
+        int max = 0;
+        for (int i = 0; i < numNodes; i++)
         {
-            if(nodesArray[i]->GetColor()>max)
+            if (nodesArray[i]->GetColor() > max)
             {
                 max = nodesArray[i]->GetColor();
             }
@@ -331,7 +334,7 @@ public:
 
     //Esta función recibe el tiempo máximo de ejecución del algoritmo Dsatur.
     //Retorna un double que representa el tiempo que se tardó el algoritmo en
-    //ejecurarse. La función está basada en la heurística Dsatur, que permite
+    //ejecutarse. La función está basada en la heurística Dsatur, que permite
     //obtener una solución aproximada al problema de coloración con un esfuerzo
     //computacional bajo. Si el tiempo de ejecución en algún momento excede el
     //tiempo máximo que recibió la función, el programa aborta.
@@ -350,7 +353,7 @@ public:
             {
                 int label = maximalSaturation->front()->GetLabel();
                 int minColor = GetMinimumFeasibleColor(label);
-                cout << label << ", " << minColor << "\n";
+                //cout << label << ", " << minColor << "\n";
 
                 if(minColor==0)
                 {
@@ -384,6 +387,7 @@ public:
                 return(-1);
             }
             delete maximalSaturation;
+            maximalSaturation = NULL;
         }
         endTime = clock();
         return (double)(endTime - startTime)/(double)CLOCKS_PER_SEC;
@@ -441,12 +445,7 @@ private:
     int numEdges;
     list<GraphNode*> * uncoloredNodes;
 
-    void sortAdjacentNodes()
-    {
-
-    }
-
-    //este método arregla los apuntadores a nodos según su grado (de mayor grado
+    //Este método arregla los apuntadores a nodos según su grado (de mayor grado
     //a menor grado)
     void sortNodesByDegree()
     {
@@ -517,7 +516,8 @@ private:
     {
         if (node_label <= 0 || node_label > numNodes)
         {
-            throw string("Etiqueta de nodo invalida en Graph::GetMinimumFeasibleColor");
+            throw string("Etiqueta de nodo invalida en"
+                         "Graph::GetMinimumAlternativeColor");
         }
 
         bool adjacentColors[numNodes];
