@@ -46,12 +46,12 @@ int main(int argc, char **argv)
         try
         {
             int contadorArchivos=0;
-            double sumaTiempo=0;
+            double sumaTiempo=0.0;
             int coloresMin = 0;
             int sumaColores=0;
             int cantExcedido=0;
             double executionTime;
-            for(int i=1; i<=60;i++)
+            for(int i=1; i<=1;i++)
             {
                 char nombreArchivo[12];
                 sprintf (nombreArchivo, "%d", i);

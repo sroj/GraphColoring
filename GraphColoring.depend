@@ -28,7 +28,7 @@
 1329512948 /home/simonr/Documents/GraphColoring/CompareLabelFunctor.h
 	"GraphNode.h"
 
-1329863200 source:/home/administrador/Documents/GraphColoring/main.cpp
+1329864083 source:/home/administrador/Documents/GraphColoring/main.cpp
 	<iostream>
 	<cstring>
 	<cstdlib>
@@ -36,7 +36,7 @@
 	<ctime>
 	<string>
 
-1329863447 /home/administrador/Documents/GraphColoring/Graph.h
+1329868318 /home/administrador/Documents/GraphColoring/Graph.h
 	<list>
 	<vector>
 	<iostream>

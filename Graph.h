@@ -331,7 +331,7 @@ public:
 
     //Esta función recibe el tiempo máximo de ejecución del algoritmo Dsatur.
     //Retorna un double que representa el tiempo que se tardó el algoritmo en
-    //ejecurarse. La función está basada en la heurística Dsatur, que permite
+    //ejecutarse. La función está basada en la heurística Dsatur, que permite
     //obtener una solución aproximada al problema de coloración con un esfuerzo
     //computacional bajo. Si el tiempo de ejecución en algún momento excede el
     //tiempo máximo que recibió la función, el programa aborta.
