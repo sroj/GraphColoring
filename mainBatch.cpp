@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <cstring>
 #include <cstdlib>
@@ -46,7 +47,7 @@ int main(int argc, char **argv)
         try
         {
             int contadorArchivos=0;
-            double sumaTiempo=0.0;
+            double sumaTiempo=0;
             int coloresMin = 0;
             int sumaColores=0;
             int cantExcedido=0;
@@ -90,6 +91,10 @@ int main(int argc, char **argv)
                     archivoGenerado << "tiempo promedio: " << (double)sumaTiempo/3.0 << "\n";
                     archivoGenerado << "cuantos con time out: " << cantExcedido << "\n";
                     archivoGenerado.close();
+                }
+                else
+                {
+                    throw string("archivoooo2");
                 }
                 contadorArchivos=0;
                 sumaColores =0;

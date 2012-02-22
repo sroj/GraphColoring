@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <cstring>
 #include <cstdlib>
@@ -34,30 +35,22 @@ int main(int argc, char **argv)
                 }
                 else
                 {
-                    throw string("El valor indicado para el tiempo es incorrecto");
+                    throw string("El valor indicado para el tiempo es incorrecto\n");
                 }
             }
             else if (strcmp("-d", argv[i]) != 0)
             {
-                throw string("Uno de los argumentos es invalido");
+                throw string("Uno de los argumentos es invalido\n");
             }
         }
 
         try
         {
-            int contadorArchivos=0;
-            double sumaTiempo=0.0;
-            int coloresMin = 0;
-            int sumaColores=0;
-            int cantExcedido=0;
+
             double executionTime;
-            for(int i=1; i<=1;i++)
-            {
-                char nombreArchivo[12];
-                sprintf (nombreArchivo, "%d", i);
-                Graph grafo(nombreArchivo);
-                contadorArchivos++;
-            //Graph grafo(argv[argc - 1]);
+
+
+            Graph grafo(argv[argc - 1]);
             if (algoritmo == dsatur)
             {
                 executionTime = grafo.Dsatur(tmax);
@@ -67,37 +60,16 @@ int main(int argc, char **argv)
                 executionTime = grafo.Brown(tmax);
 
             }
-            if(executionTime !=-1)
+            if (executionTime !=-1)
             {
-                coloresMin = grafo.getNumberOfColors();
+                grafo.printOutput(cout, executionTime);
             }
             else
             {
-                cantExcedido++;
-            }
-            sumaTiempo= sumaTiempo+ executionTime;
-            sumaColores = sumaColores + coloresMin;
-            grafo.printOutput(cout, executionTime);
-
-            if(contadorArchivos==3)
-            {
-                ofstream archivoGenerado;
-                strcat(nombreArchivo,".out");
-                archivoGenerado.open (nombreArchivo);
-                if (archivoGenerado.is_open())
-                {
-                    archivoGenerado << "colores promedio: " << (double)sumaColores/3.0 << "\n";
-                    archivoGenerado << "tiempo promedio: " << (double)sumaTiempo/3.0 << "\n";
-                    archivoGenerado << "cuantos con time out: " << cantExcedido << "\n";
-                    archivoGenerado.close();
-                }
-                contadorArchivos=0;
-                sumaColores =0;
-                sumaTiempo=0;
-                cantExcedido=0;
+                cout << "El tiempo de ejecucion permitido fue excedido\n";
+                return EXIT_FAILURE;
             }
 
-            }
 
         }
         catch (string mensaje)
@@ -108,7 +80,7 @@ int main(int argc, char **argv)
     }
     else
     {
-        cout << ("El numero de argumentos es incorrecto");
+        cout << ("El numero de argumentos es incorrecto\n");
         return EXIT_FAILURE;
     }
     return EXIT_SUCCESS;

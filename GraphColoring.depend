@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1329794648 source:/home/simonr/Documents/GraphColoring/main.cpp
+1329866921 source:/home/simonr/Documents/GraphColoring/main.cpp
 	<iostream>
 	<cstring>
 	<cstdlib>
@@ -7,7 +7,7 @@
 	<ctime>
 	<string>
 
-1329862215 /home/simonr/Documents/GraphColoring/Graph.h
+1329874629 /home/simonr/Documents/GraphColoring/Graph.h
 	<list>
 	<vector>
 	<iostream>
@@ -20,7 +20,7 @@
 	"CompareDegreeFunctor.h"
 	"CompareLabelFunctor.h"
 
-1329701566 /home/simonr/Documents/GraphColoring/GraphNode.h
+1329862951 /home/simonr/Documents/GraphColoring/GraphNode.h
 
 1329512947 /home/simonr/Documents/GraphColoring/CompareDegreeFunctor.h
 	"GraphNode.h"
@@ -28,7 +28,7 @@
 1329512948 /home/simonr/Documents/GraphColoring/CompareLabelFunctor.h
 	"GraphNode.h"
 
-1329864083 source:/home/administrador/Documents/GraphColoring/main.cpp
+1329875117 source:/home/administrador/Documents/GraphColoring/main.cpp
 	<iostream>
 	<cstring>
 	<cstdlib>
@@ -36,7 +36,7 @@
 	<ctime>
 	<string>
 
-1329868318 /home/administrador/Documents/GraphColoring/Graph.h
+1329877254 /home/administrador/Documents/GraphColoring/Graph.h
 	<list>
 	<vector>
 	<iostream>
