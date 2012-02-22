@@ -257,7 +257,6 @@ public:
         {
             output << i + 1 << "\t" << nodesArray[i]->GetColor() << "\n";
         }
-        output << endl;
     }
 
     void printCurrentColoring()
@@ -430,7 +429,8 @@ public:
                 continue;
             }
         }
-        memcpy(nodesArray, finalColorationBrown, numNodes * sizeof(GraphNode*));
+
+        copyFinalToNodesArray();
         return (clock() - startTime)/(double)CLOCKS_PER_SEC;
     }
 
@@ -459,6 +459,7 @@ private:
         for (int i = 0; i < numNodes; i++)
         {
             nodesArray[i] = nodesDegreeSortedArray[i] = new GraphNode();
+            finalColorationBrown[i] = new GraphNode();
             nodesArray[i]->SetLabel(i + 1);
         }
     }
@@ -630,7 +631,15 @@ private:
     {
         for(int i = 0; i < numNodes; i++)
         {
-            finalColorationBrown[i] = new GraphNode(*(nodesArray[i]));
+            *(finalColorationBrown[i]) = *(nodesArray[i]);
+        }
+    }
+
+    void copyFinalToNodesArray()
+    {
+         for(int i = 0; i < numNodes; i++)
+        {
+            *(nodesArray[i]) = *(finalColorationBrown[i]);
         }
     }
 };
