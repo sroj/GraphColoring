@@ -12,7 +12,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
-				<Option parameters="-b queen5_5.col" />
+				<Option parameters="-d queen5_5.col" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>

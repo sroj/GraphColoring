@@ -249,41 +249,17 @@ public:
     void printOutput(ostream& output, double time)
     {
         output.precision(8);
-        output << "\nTiempo de ejecucion: " << fixed << time << "\n";
-        output << "Numero de colores encontrados: " << getNumberOfColors()
+        output << "-----------------------------------";
+        output << "\nTIEMPO DE EJECUCION: " << fixed << time << "\n";
+        output << "NUMERO DE COLORES ENCONTRADOS: " << getNumberOfColors()
         << "\n";
+        output << "COLORACION ENCONTRADA:\n";
         output << "Vertice\tColor\n";
         for (int i = 0; i < numNodes; i++)
         {
             output << i + 1 << "\t" << nodesArray[i]->GetColor() << "\n";
         }
-    }
-
-    void printCurrentColoring()
-    {
-        cout << "Vertice\tColor\n";
-        for (int i = 0; i < numNodes; i++)
-        {
-            cout << i + 1 << "\t"
-                 << nodesArray[i]->GetColor() << "\n";
-        }
-    }
-
-    void printGraphStructure()
-    {
-        cout << "Estructura del grafo:" << endl;
-        vector<GraphNode*> * adjacents;
-        for (int i = 0; i < numNodes; i++)
-        {
-            cout << "Nodo " << i + 1 << " es adyacente a:" <<endl;
-            adjacents = adjacencyArray[i];
-            for (unsigned int j = 0; j < adjacents->size(); j++)
-            {
-                cout << "Etiqueta: " << (*adjacents)[j]->GetLabel() << " Color:"
-                     << (*adjacents)[j]->GetColor() << endl;
-            }
-            cout << "\n";
-        }
+        output << "-----------------------------------";
     }
 
     //Este método retorna un apuntador a un vector que contiene apuntadores a
