@@ -612,7 +612,7 @@ private:
 
     void copyFinalToNodesArray()
     {
-         for(int i = 0; i < numNodes; i++)
+        for(int i = 0; i < numNodes; i++)
         {
             *(nodesArray[i]) = *(finalColorationBrown[i]);
         }
